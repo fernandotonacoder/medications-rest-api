@@ -12,4 +12,8 @@
         <ProjectReference Include="..\Medications.Api\MedicationsApi.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Scalar.Aspire" />
+    </ItemGroup>
+
 </Project>
