@@ -28,6 +28,22 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 
+# IDE state
+.idea/
+.vs/
+.vscode-test/
+*.suo
+*.user
+*.userossc
+*.rsuser
+*.sln.docstates
+*.userprefs
+*.vcxproj.user
+
+# OS clutter
+.DS_Store
+Thumbs.db
+
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
 
@@ -43,6 +59,8 @@ ScaffoldingReadMe.txt
 ~$*
 *~
 CodeCoverage/
+TestResults/
+coverage/
 
 # MSBuild Binary and Structured Log
 *.binlog
