@@ -1,3 +1,5 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.Build().Run();
+builder.AddProject<Projects.MedicationsApi>("medicationsapi");
+
+await builder.Build().RunAsync();
