@@ -11,7 +11,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.MapGet("/medications", async (MedicationsDb db) =>
 {
@@ -19,4 +19,4 @@ app.MapGet("/medications", async (MedicationsDb db) =>
 })
 .WithName("GetMedications");
 
-app.Run();
+await app.RunAsync();
