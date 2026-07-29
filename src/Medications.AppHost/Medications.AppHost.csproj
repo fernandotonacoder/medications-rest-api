@@ -8,4 +8,8 @@
         <UserSecretsId>dc8941e3-0794-4122-a9d7-f3c18746f746</UserSecretsId>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\Medications.Api\MedicationsApi.csproj" />
+    </ItemGroup>
+
 </Project>
