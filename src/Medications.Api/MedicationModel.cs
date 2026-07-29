@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace MedicationsApi;
 
 public class MedicationModel
@@ -5,6 +7,7 @@ public class MedicationModel
     /// <summary>
     /// Gets or sets the ID of the medication.
     /// </summary>
+    [Key]
     public int MedicationId { get; set; }
     
     /// <summary>
