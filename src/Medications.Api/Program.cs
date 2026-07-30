@@ -1,8 +1,9 @@
-using MedicationsApi;
+using Medications.Api.Data;
+using Medications.Api.Endpoints;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<MedicationsDb>(opt => opt.UseInMemoryDatabase("Medications"));
+builder.Services.AddDbContext<MedicationsDbContext>(opt => opt.UseInMemoryDatabase("Medications"));
 builder.Services.AddOpenApi();
 var app = builder.Build();
 
@@ -13,10 +14,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/medications", async (MedicationsDb db) =>
-{
-    await db.Medications.ToListAsync();
-})
-.WithName("GetMedications");
+app.MapMedicationEndpoints();
 
 await app.RunAsync();

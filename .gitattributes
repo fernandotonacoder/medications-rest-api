@@ -1,0 +1,13 @@
+# Normalize line endings to LF everywhere, regardless of core.autocrlf.
+* text=auto eol=lf
+
+# Formats that require a specific terminator.
+*.sh text eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Never convert.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.ico binary
