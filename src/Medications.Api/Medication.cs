@@ -8,5 +8,5 @@ public class Medication
 
     public int Quantity { get; set; }
 
-    public DateTime CreationDate { get; set; }
+    public required DateTimeOffset CreationDate { get; set; }
 }
