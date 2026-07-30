@@ -1,4 +1,5 @@
 using MedicationsApi;
+using MedicationsApi.Endpoints;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,10 +14,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/medications", async (MedicationsDb db) =>
-{
-    await db.Medications.ToListAsync();
-})
-.WithName("GetMedications");
+app.MapMedicationEndpoints();
 
 await app.RunAsync();
