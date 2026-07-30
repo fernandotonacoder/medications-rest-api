@@ -13,9 +13,9 @@ public static class MedicationEndpoints
             .WithTags("Medications");
 
         group.MapGet("/", GetAllMedications)
-        .WithName("GetMedications")
-        .WithDescription("Retrieve all medications.");
-        
+            .WithName("GetMedications")
+            .WithDescription("Retrieve all medications.");
+
         group.MapGet("/{id}", GetMedication)
             .WithName("GetMedication")
             .WithDescription("Retrieve a specific medication by its ID.");
@@ -30,7 +30,7 @@ public static class MedicationEndpoints
     private static async Task<Results<Ok<Medication>, NotFound>> GetMedication(int id, MedicationsDbContext dbContext)
     {
         var medication = await dbContext.Medications.FindAsync(id);
-        
+
         if (medication is null) return TypedResults.NotFound();
 
         return TypedResults.Ok(medication);
