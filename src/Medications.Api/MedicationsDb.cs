@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace MedicationsApi;
+namespace Medications.Api;
 
 public class MedicationsDb : DbContext
 {

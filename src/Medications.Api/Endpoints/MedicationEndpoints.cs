@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
-namespace MedicationsApi.Endpoints;
+namespace Medications.Api.Endpoints;
 
 public static class MedicationEndpoints
 {
@@ -11,7 +11,8 @@ public static class MedicationEndpoints
             .WithTags("Medications");
 
         group.MapGet("/", GetAllMedications)
-        .WithName("GetMedications");
+        .WithName("GetMedications")
+        .WithDescription("Retrieve all medications.");
     }
 
     private static async Task<Ok<List<Medication>>> GetAllMedications(MedicationsDb db)

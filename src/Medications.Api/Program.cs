@@ -1,5 +1,5 @@
-using MedicationsApi;
-using MedicationsApi.Endpoints;
+using Medications.Api;
+using Medications.Api.Endpoints;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
