@@ -1,4 +1,4 @@
-namespace Medications.Api;
+namespace Medications.Api.Entities;
 
 public class Medication
 {

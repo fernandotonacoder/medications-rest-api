@@ -1,4 +1,4 @@
-using Medications.Api;
+using Medications.Api.Data;
 using Medications.Api.Endpoints;
 using Microsoft.EntityFrameworkCore;
 
