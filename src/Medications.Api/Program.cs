@@ -3,7 +3,7 @@ using Medications.Api.Endpoints;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<MedicationsDb>(opt => opt.UseInMemoryDatabase("Medications"));
+builder.Services.AddDbContext<MedicationsDbContext>(opt => opt.UseInMemoryDatabase("Medications"));
 builder.Services.AddOpenApi();
 var app = builder.Build();
 

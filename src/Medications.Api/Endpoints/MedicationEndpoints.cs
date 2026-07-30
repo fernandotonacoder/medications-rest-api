@@ -15,9 +15,9 @@ public static class MedicationEndpoints
         .WithDescription("Retrieve all medications.");
     }
 
-    private static async Task<Ok<List<Medication>>> GetAllMedications(MedicationsDb db)
+    private static async Task<Ok<List<Medication>>> GetAllMedications(MedicationsDbContext dbContext)
     {
-        var medications = await db.Medications.ToListAsync();
+        var medications = await dbContext.Medications.ToListAsync();
         return TypedResults.Ok(medications);
     }
 }
