@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MedicationsDbContext>(opt => opt.UseInMemoryDatabase("Medications"));
 builder.Services.AddOpenApi();
+builder.Services.AddValidation();
+builder.Services.AddSingleton(TimeProvider.System);
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
