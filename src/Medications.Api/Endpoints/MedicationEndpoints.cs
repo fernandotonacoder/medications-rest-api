@@ -61,6 +61,6 @@ public static class MedicationEndpoints
 
         var medicationResponse = medication.ToResponse();
 
-        return TypedResults.CreatedAtRoute(medicationResponse, "GetMedication", new { id = medicationResponse.Id} );
+        return TypedResults.CreatedAtRoute(medicationResponse, "GetMedication", new { id = medicationResponse.Id });
     }
 }
