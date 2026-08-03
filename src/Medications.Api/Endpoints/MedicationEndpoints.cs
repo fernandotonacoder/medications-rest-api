@@ -8,27 +8,39 @@ namespace Medications.Api.Endpoints;
 
 public static class MedicationEndpoints
 {
+    private const string GetMedicationsEndpoint = "GetMedications";
+    private const string GetMedicationEndpoint = "GetMedication";
+    private const string CreateMedicationEndpoint = "CreateMedication";
+    private const string DeleteMedicationEndpoint = "CreateMedication";
+
+
     public static IEndpointRouteBuilder MapMedicationEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/medications")
             .WithTags("Medications");
 
-        group.MapGet("/", GetAllMedications)
-            .WithName("GetMedications")
+        group.MapGet("/", GetMedications)
+            .WithName(GetMedicationsEndpoint)
             .WithDescription("Retrieve all medications.");
 
         group.MapGet("/{id}", GetMedication)
-            .WithName("GetMedication")
+            .WithName(GetMedicationEndpoint)
             .WithDescription("Retrieve a specific medication by its ID.");
 
         group.MapPost("/", CreateMedication)
-            .WithName("CreateMedication")
+            .WithName(CreateMedicationEndpoint)
             .WithDescription("Create a new medication");
+
+        group.MapDelete("/{id}", DeleteMedication)
+            .WithName(DeleteMedicationEndpoint)
+            .WithDescription("Delete a medication");
 
         return endpoints;
     }
 
-    private static async Task<Ok<List<MedicationResponse>>> GetAllMedications(MedicationsDbContext dbContext)
+    #region Private Methods
+
+    private static async Task<Ok<List<MedicationResponse>>> GetMedications(MedicationsDbContext dbContext)
     {
         var medications = await dbContext.Medications.ToListAsync();
 
@@ -38,9 +50,9 @@ public static class MedicationEndpoints
     }
 
     private static async Task<Results<Ok<MedicationResponse>, NotFound>> GetMedication(
-        int id, MedicationsDbContext dbContext)
+        int id, MedicationsDbContext dbContext, CancellationToken cancellationToken)
     {
-        var medication = await dbContext.Medications.FindAsync(id);
+        var medication = await dbContext.Medications.FindAsync(id, cancellationToken);
 
         if (medication is null) return TypedResults.NotFound();
 
@@ -63,4 +75,19 @@ public static class MedicationEndpoints
 
         return TypedResults.CreatedAtRoute(medicationResponse, "GetMedication", new { id = medicationResponse.Id });
     }
+
+    private static async Task<Results<NoContent, NotFound>> DeleteMedication(
+        int id, MedicationsDbContext dbContext, CancellationToken cancellationToken)
+    {
+        var medication = await dbContext.Medications.FindAsync(id, cancellationToken);
+
+        if (medication is null) return TypedResults.NotFound();
+
+        dbContext.Medications.Remove(medication);
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return TypedResults.NoContent();
+    }
+
+    #endregion
+
 }

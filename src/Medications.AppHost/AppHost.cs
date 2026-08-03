@@ -1,19 +1,8 @@
 using Projects;
-using Scalar.Aspire;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var apiService = builder.AddProject<Medications_Api>("medications-api");
-
-var scalar = builder.AddScalarApiReference("scalar", options =>
-{
-    options
-        .WithTheme(ScalarTheme.Default)
-        .PreferHttpsEndpoint()
-        .AllowSelfSignedCertificates();
-});
-
-scalar
-    .WithApiReference(apiService);
+builder.AddProject<Medications_Api>("medications-api")
+    .WithUrlForEndpoint("https", url => new() { Url = "/scalar", DisplayText = "Scalar UI", DisplayOrder = 100 });
 
 await builder.Build().RunAsync();

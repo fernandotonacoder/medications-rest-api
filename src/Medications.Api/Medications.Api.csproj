@@ -4,6 +4,7 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory"/>
     <PackageReference Include="Microsoft.OpenApi"/>
+    <PackageReference Include="Scalar.AspNetCore"/>
   </ItemGroup>
 
 </Project>
