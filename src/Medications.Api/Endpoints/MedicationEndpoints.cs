@@ -13,7 +13,6 @@ public static class MedicationEndpoints
     private const string CreateMedicationEndpoint = "CreateMedication";
     private const string DeleteMedicationEndpoint = "DeleteMedication";
 
-
     public static IEndpointRouteBuilder MapMedicationEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/medications")
@@ -38,11 +37,9 @@ public static class MedicationEndpoints
         return endpoints;
     }
 
-    #region Internal Methods
-
-    internal static async Task<Ok<List<MedicationResponse>>> GetMedications(MedicationsDbContext dbContext)
+    internal static async Task<Ok<List<MedicationResponse>>> GetMedications(MedicationsDbContext dbContext, CancellationToken cancellationToken)
     {
-        var medications = await dbContext.Medications.ToListAsync();
+        var medications = await dbContext.Medications.ToListAsync(cancellationToken);
 
         var medicationResponseList = medications.Select(medication => medication.ToResponse()).ToList();
 
@@ -73,7 +70,7 @@ public static class MedicationEndpoints
 
         var medicationResponse = medication.ToResponse();
 
-        return TypedResults.CreatedAtRoute(medicationResponse, "GetMedication", new { id = medicationResponse.Id });
+        return TypedResults.CreatedAtRoute(medicationResponse, GetMedicationEndpoint, new { id = medicationResponse.Id });
     }
 
     internal static async Task<Results<NoContent, NotFound>> DeleteMedication(
@@ -87,7 +84,4 @@ public static class MedicationEndpoints
         await dbContext.SaveChangesAsync(cancellationToken);
         return TypedResults.NoContent();
     }
-
-    #endregion
-
 }
