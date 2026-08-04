@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  CI:
+  build-and-test:
 
     runs-on: ubuntu-latest
 
