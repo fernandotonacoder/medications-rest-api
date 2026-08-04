@@ -11,7 +11,7 @@ public static class MedicationEndpoints
     private const string GetMedicationsEndpoint = "GetMedications";
     private const string GetMedicationEndpoint = "GetMedication";
     private const string CreateMedicationEndpoint = "CreateMedication";
-    private const string DeleteMedicationEndpoint = "CreateMedication";
+    private const string DeleteMedicationEndpoint = "DeleteMedication";
 
 
     public static IEndpointRouteBuilder MapMedicationEndpoints(this IEndpointRouteBuilder endpoints)
@@ -38,9 +38,9 @@ public static class MedicationEndpoints
         return endpoints;
     }
 
-    #region Private Methods
+    #region Internal Methods
 
-    private static async Task<Ok<List<MedicationResponse>>> GetMedications(MedicationsDbContext dbContext)
+    internal static async Task<Ok<List<MedicationResponse>>> GetMedications(MedicationsDbContext dbContext)
     {
         var medications = await dbContext.Medications.ToListAsync();
 
@@ -49,7 +49,7 @@ public static class MedicationEndpoints
         return TypedResults.Ok(medicationResponseList);
     }
 
-    private static async Task<Results<Ok<MedicationResponse>, NotFound>> GetMedication(
+    internal static async Task<Results<Ok<MedicationResponse>, NotFound>> GetMedication(
         int id, MedicationsDbContext dbContext, CancellationToken cancellationToken)
     {
         var medication = await dbContext.Medications.FindAsync(id, cancellationToken);
@@ -59,7 +59,7 @@ public static class MedicationEndpoints
         return TypedResults.Ok(medication.ToResponse());
     }
 
-    private static async Task<CreatedAtRoute<MedicationResponse>> CreateMedication(
+    internal static async Task<CreatedAtRoute<MedicationResponse>> CreateMedication(
         CreateMedicationRequest request,
         MedicationsDbContext dbContext,
         TimeProvider timeProvider,
@@ -76,7 +76,7 @@ public static class MedicationEndpoints
         return TypedResults.CreatedAtRoute(medicationResponse, "GetMedication", new { id = medicationResponse.Id });
     }
 
-    private static async Task<Results<NoContent, NotFound>> DeleteMedication(
+    internal static async Task<Results<NoContent, NotFound>> DeleteMedication(
         int id, MedicationsDbContext dbContext, CancellationToken cancellationToken)
     {
         var medication = await dbContext.Medications.FindAsync(id, cancellationToken);

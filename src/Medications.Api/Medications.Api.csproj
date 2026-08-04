@@ -5,6 +5,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory"/>
     <PackageReference Include="Microsoft.OpenApi"/>
     <PackageReference Include="Scalar.AspNetCore"/>
+    <InternalsVisibleTo Include="Medications.Unit.Tests" />
   </ItemGroup>
 
 </Project>

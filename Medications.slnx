@@ -1,6 +1,9 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src\Medications.Api\Medications.Api.csproj"/>
-    <Project Path="src\Medications.AppHost\Medications.AppHost.csproj"/>
+    <Project Path="src\Medications.Api\Medications.Api.csproj" />
+    <Project Path="src\Medications.AppHost\Medications.AppHost.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests\Medications.Unit.Tests\Medications.Unit.Tests.csproj" />
   </Folder>
 </Solution>
