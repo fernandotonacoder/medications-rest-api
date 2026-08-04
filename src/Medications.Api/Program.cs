@@ -8,6 +8,16 @@ builder.Services.AddDbContext<MedicationsDbContext>(opt => opt.UseInMemoryDataba
 builder.Services.AddOpenApi();
 builder.Services.AddValidation();
 builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = context =>
+    {
+        if (context.Exception is BadHttpRequestException badRequest)
+        {
+            context.ProblemDetails.Detail ??= badRequest.Message;
+        }
+    };
+});
 
 var app = builder.Build();
 
@@ -16,6 +26,14 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
+app.UseExceptionHandler(new ExceptionHandlerOptions
+{
+    StatusCodeSelector = ex => ex is BadHttpRequestException badRequest
+        ? badRequest.StatusCode
+        : StatusCodes.Status500InternalServerError
+});
+app.UseStatusCodePages();
 
 app.UseHttpsRedirection();
 

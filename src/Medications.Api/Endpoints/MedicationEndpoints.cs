@@ -8,31 +8,36 @@ namespace Medications.Api.Endpoints;
 
 public static class MedicationEndpoints
 {
-    private const string GetMedicationsEndpoint = "GetMedications";
-    private const string GetMedicationEndpoint = "GetMedication";
-    private const string CreateMedicationEndpoint = "CreateMedication";
-    private const string DeleteMedicationEndpoint = "DeleteMedication";
+    private const string RouteGroupPrefix = "/api/medications";
+
+    private const string GetMedicationsEndpointName = "GetMedications";
+    private const string GetMedicationEndpointName = "GetMedication";
+    private const string CreateMedicationEndpointName = "CreateMedication";
+    private const string DeleteMedicationEndpointName = "DeleteMedication";
 
     public static IEndpointRouteBuilder MapMedicationEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        var group = endpoints.MapGroup("/api/medications")
+        var group = endpoints.MapGroup(RouteGroupPrefix)
             .WithTags("Medications");
 
         group.MapGet("/", GetMedications)
-            .WithName(GetMedicationsEndpoint)
+            .WithName(GetMedicationsEndpointName)
             .WithDescription("Retrieve all medications.");
 
         group.MapGet("/{id}", GetMedication)
-            .WithName(GetMedicationEndpoint)
-            .WithDescription("Retrieve a specific medication by its ID.");
+            .WithName(GetMedicationEndpointName)
+            .WithDescription("Retrieve a specific medication by its ID.")
+            .ProducesProblem(StatusCodes.Status400BadRequest);
 
         group.MapPost("/", CreateMedication)
-            .WithName(CreateMedicationEndpoint)
-            .WithDescription("Create a new medication");
+            .WithName(CreateMedicationEndpointName)
+            .WithDescription("Create a new medication")
+            .ProducesValidationProblem();
 
         group.MapDelete("/{id}", DeleteMedication)
-            .WithName(DeleteMedicationEndpoint)
-            .WithDescription("Delete a medication");
+            .WithName(DeleteMedicationEndpointName)
+            .WithDescription("Delete a medication")
+            .ProducesProblem(StatusCodes.Status400BadRequest);
 
         return endpoints;
     }
@@ -46,9 +51,11 @@ public static class MedicationEndpoints
         return TypedResults.Ok(medicationResponseList);
     }
 
-    internal static async Task<Results<Ok<MedicationResponse>, NotFound>> GetMedication(
+    internal static async Task<Results<Ok<MedicationResponse>, NotFound, ProblemHttpResult>> GetMedication(
         int id, MedicationsDbContext dbContext, CancellationToken cancellationToken)
     {
+        if (id <= 0) return InvalidId();
+
         var medication = await dbContext.Medications.FindAsync(id, cancellationToken);
 
         if (medication is null) return TypedResults.NotFound();
@@ -70,12 +77,14 @@ public static class MedicationEndpoints
 
         var medicationResponse = medication.ToResponse();
 
-        return TypedResults.CreatedAtRoute(medicationResponse, GetMedicationEndpoint, new { id = medicationResponse.Id });
+        return TypedResults.CreatedAtRoute(medicationResponse, GetMedicationEndpointName, new { id = medicationResponse.Id });
     }
 
-    internal static async Task<Results<NoContent, NotFound>> DeleteMedication(
+    internal static async Task<Results<NoContent, NotFound, ProblemHttpResult>> DeleteMedication(
         int id, MedicationsDbContext dbContext, CancellationToken cancellationToken)
     {
+        if (id <= 0) return InvalidId();
+
         var medication = await dbContext.Medications.FindAsync(id, cancellationToken);
 
         if (medication is null) return TypedResults.NotFound();
@@ -84,4 +93,9 @@ public static class MedicationEndpoints
         await dbContext.SaveChangesAsync(cancellationToken);
         return TypedResults.NoContent();
     }
+
+    private static ProblemHttpResult InvalidId() =>
+        TypedResults.Problem(
+            detail: "Id must be greater than zero.",
+            statusCode: StatusCodes.Status400BadRequest);
 }
