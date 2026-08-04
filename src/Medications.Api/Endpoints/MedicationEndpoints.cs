@@ -56,7 +56,7 @@ public static class MedicationEndpoints
     {
         if (id <= 0) return InvalidId();
 
-        var medication = await dbContext.Medications.FindAsync(id, cancellationToken);
+        var medication = await dbContext.Medications.FindAsync([id], cancellationToken);
 
         if (medication is null) return TypedResults.NotFound();
 
@@ -85,7 +85,7 @@ public static class MedicationEndpoints
     {
         if (id <= 0) return InvalidId();
 
-        var medication = await dbContext.Medications.FindAsync(id, cancellationToken);
+        var medication = await dbContext.Medications.FindAsync([id], cancellationToken);
 
         if (medication is null) return TypedResults.NotFound();
 
