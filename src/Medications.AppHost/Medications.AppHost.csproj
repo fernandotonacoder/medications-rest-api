@@ -9,8 +9,4 @@
     <ProjectReference Include="..\Medications.Api\Medications.Api.csproj"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Scalar.Aspire"/>
-  </ItemGroup>
-
 </Project>
