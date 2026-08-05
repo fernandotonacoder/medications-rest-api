@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.1
         with:
-          fetch-depth: 0   # full history so Sonar can attribute new code via blame
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v6.0.0
@@ -55,7 +55,8 @@ jobs:
         run: dotnet build --no-incremental
 
       - name: Test
-        run: dotnet test --no-build --collect:"XPlat Code Coverage"
+        # RunSettingsFilePath points at tests/test.runsettings in cobertura format
+        run: dotnet test --no-build
 
       - name: End Sonar analysis
         if: env.SONAR_TOKEN != ''

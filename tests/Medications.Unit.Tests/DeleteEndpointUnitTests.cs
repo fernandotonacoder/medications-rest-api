@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Medications.Unit.Tests
 {
-    public class EndpointUnitTests
+    public class DeleteEndpointUnitTests
     {
         [Fact]
-        public async Task DeleteMedicationById_WhenMedicationExists_ReturnsNoContent()
+        public async Task DeleteMedication_WhenMedicationExists_ReturnsNoContent()
         {
             await using var dbContext = CreateContext(NewMedication(1), NewMedication(2));
 
@@ -22,7 +22,7 @@ namespace Medications.Unit.Tests
         }
 
         [Fact]
-        public async Task DeleteMedicationById_WhenMedicationDoesNotExist_ReturnsNotFound()
+        public async Task DeleteMedication_WhenMedicationDoesNotExist_ReturnsNotFound()
         {
             await using var dbContext = CreateContext(NewMedication(1), NewMedication(2));
 
@@ -33,17 +33,20 @@ namespace Medications.Unit.Tests
             Assert.NotNull(dbContext.Medications.Find(2));
         }
 
-        [Fact]
-        public async Task DeleteMedicationById_WhenIdIsNegative_ReturnsBadRequest()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public async Task DeleteMedication_WhenIdNotGreaterThanZero_ReturnsBadRequest(int id)
         {
             await using var dbContext = CreateContext(NewMedication(1), NewMedication(2));
 
-            var result = await MedicationEndpoints.DeleteMedication(-1, dbContext, CancellationToken.None);
+            var result = await MedicationEndpoints.DeleteMedication(id, dbContext, CancellationToken.None);
 
             var problem = Assert.IsType<ProblemHttpResult>(result.Result);
             Assert.Equal(StatusCodes.Status400BadRequest, problem.StatusCode);
             Assert.NotNull(dbContext.Medications.Find(1));
             Assert.NotNull(dbContext.Medications.Find(2));
+            Assert.Equal("Id must be greater than zero.", problem.ProblemDetails.Detail);
         }
 
         private static MedicationsDbContext CreateContext(params Medication[] seed)
@@ -65,7 +68,8 @@ namespace Medications.Unit.Tests
             Id = id,
             Name = $"Test Medication {id}",
             Quantity = 10 * id,
-            CreationDate = DateTimeOffset.UtcNow
+            CreationDate = new DateTimeOffset(2026, 1, 15, 9, 30, 0, TimeSpan.Zero)
         };
+
     }
 }
