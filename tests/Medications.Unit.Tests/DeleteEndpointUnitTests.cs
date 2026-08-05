@@ -1,9 +1,7 @@
-using Medications.Api.Data;
 using Medications.Api.Endpoints;
-using Medications.Api.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
+using static Medications.Unit.Tests.TestDbContextFactory;
 
 namespace Medications.Unit.Tests
 {
@@ -44,32 +42,9 @@ namespace Medications.Unit.Tests
 
             var problem = Assert.IsType<ProblemHttpResult>(result.Result);
             Assert.Equal(StatusCodes.Status400BadRequest, problem.StatusCode);
+            Assert.Equal("Id must be greater than zero.", problem.ProblemDetails.Detail);
             Assert.NotNull(dbContext.Medications.Find(1));
             Assert.NotNull(dbContext.Medications.Find(2));
-            Assert.Equal("Id must be greater than zero.", problem.ProblemDetails.Detail);
         }
-
-        private static MedicationsDbContext CreateContext(params Medication[] seed)
-        {
-            var options = new DbContextOptionsBuilder<MedicationsDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-
-            var dbContext = new MedicationsDbContext(options);
-
-            dbContext.Medications.AddRange(seed);
-            dbContext.SaveChanges();
-
-            return dbContext;
-        }
-
-        private static Medication NewMedication(int id) => new()
-        {
-            Id = id,
-            Name = $"Test Medication {id}",
-            Quantity = 10 * id,
-            CreationDate = new DateTimeOffset(2026, 1, 15, 9, 30, 0, TimeSpan.Zero)
-        };
-
     }
 }

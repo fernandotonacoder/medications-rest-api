@@ -1,9 +1,8 @@
 using Medications.Api.Contracts;
-using Medications.Api.Data;
 using Medications.Api.Endpoints;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Time.Testing;
+using static Medications.Unit.Tests.TestDbContextFactory;
 
 namespace Medications.Unit.Tests
 {
@@ -32,15 +31,6 @@ namespace Medications.Unit.Tests
             Assert.Equal(medicationRequest.Name, persistedMedication.Name);
             Assert.Equal(medicationRequest.Quantity, persistedMedication.Quantity);
             Assert.Equal(clock.GetUtcNow(), persistedMedication.CreationDate);
-        }
-
-        private static MedicationsDbContext CreateContext()
-        {
-            var options = new DbContextOptionsBuilder<MedicationsDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-
-            return new MedicationsDbContext(options);
         }
 
         private static CreateMedicationRequest GenerateCreateMedicationRequest(string name, int quantity)

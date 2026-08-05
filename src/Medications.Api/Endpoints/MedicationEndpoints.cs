@@ -45,7 +45,9 @@ public static class MedicationEndpoints
     internal static async Task<Ok<List<MedicationResponse>>> GetMedications(
         MedicationsDbContext dbContext, CancellationToken cancellationToken)
     {
-        var medications = await dbContext.Medications.ToListAsync(cancellationToken);
+        var medications = await dbContext.Medications
+            .OrderBy(medication => medication.Id)
+            .ToListAsync(cancellationToken);
 
         var medicationResponseList = medications.Select(medication => medication.ToResponse()).ToList();
 
