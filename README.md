@@ -5,7 +5,7 @@ A small REST API to list, create and delete medications, built with .NET 10 Mini
 ## Tech stack
 
 - **.NET 10 / C#** — ASP.NET Core [Minimal APIs]
-- **[EF Core]** — [InMemory provider]
+- **[EF Core]** — [InMemory provider] for Unit Tests, SQL Server for the real app
 - **[.NET Aspire]** — AppHost for local orchestration
 - **OpenAPI + [Scalar]** — generated document with interactive UI (Development only)
 - **[xunit v3][xunit]** — unit tests, with Coverlet coverage feeding SonarQube Cloud in CI
