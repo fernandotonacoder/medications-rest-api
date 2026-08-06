@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Medications.Api.Contracts;
 using Medications.Api.Data;
 using Medications.Api.Mapping;
@@ -27,7 +28,8 @@ public static class MedicationEndpoints
         group.MapGet("/{id}", GetMedication)
             .WithName(GetMedicationEndpointName)
             .WithDescription("Retrieve a specific medication by its ID.")
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status404NotFound);
 
         group.MapPost("/", CreateMedication)
             .WithName(CreateMedicationEndpointName)
@@ -37,7 +39,8 @@ public static class MedicationEndpoints
         group.MapDelete("/{id}", DeleteMedication)
             .WithName(DeleteMedicationEndpointName)
             .WithDescription("Delete a medication")
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status404NotFound);
 
         return endpoints;
     }
@@ -54,11 +57,10 @@ public static class MedicationEndpoints
         return TypedResults.Ok(medicationResponseList);
     }
 
-    internal static async Task<Results<Ok<MedicationResponse>, NotFound, ProblemHttpResult>> GetMedication(
-        int id, MedicationsDbContext dbContext, CancellationToken cancellationToken)
+    internal static async Task<Results<Ok<MedicationResponse>, NotFound>> GetMedication(
+        [Range(1, int.MaxValue, ErrorMessage = "Id must be greater than zero.")] int id,
+        MedicationsDbContext dbContext, CancellationToken cancellationToken)
     {
-        if (id <= 0) return InvalidId();
-
         var medication = await dbContext.Medications.FindAsync([id], cancellationToken);
 
         if (medication is null) return TypedResults.NotFound();
@@ -83,11 +85,10 @@ public static class MedicationEndpoints
         return TypedResults.CreatedAtRoute(medicationResponse, GetMedicationEndpointName, new { id = medicationResponse.Id });
     }
 
-    internal static async Task<Results<NoContent, NotFound, ProblemHttpResult>> DeleteMedication(
-        int id, MedicationsDbContext dbContext, CancellationToken cancellationToken)
+    internal static async Task<Results<NoContent, NotFound>> DeleteMedication(
+        [Range(1, int.MaxValue, ErrorMessage = "Id must be greater than zero.")] int id,
+        MedicationsDbContext dbContext, CancellationToken cancellationToken)
     {
-        if (id <= 0) return InvalidId();
-
         var medication = await dbContext.Medications.FindAsync([id], cancellationToken);
 
         if (medication is null) return TypedResults.NotFound();
@@ -96,9 +97,4 @@ public static class MedicationEndpoints
         await dbContext.SaveChangesAsync(cancellationToken);
         return TypedResults.NoContent();
     }
-
-    private static ProblemHttpResult InvalidId() =>
-        TypedResults.Problem(
-            detail: "Id must be greater than zero.",
-            statusCode: StatusCodes.Status400BadRequest);
 }

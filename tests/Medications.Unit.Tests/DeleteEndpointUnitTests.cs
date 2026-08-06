@@ -1,5 +1,4 @@
 using Medications.Api.Endpoints;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using static Medications.Unit.Tests.TestDbContextFactory;
 
@@ -27,22 +26,6 @@ namespace Medications.Unit.Tests
             var result = await MedicationEndpoints.DeleteMedication(3, dbContext, CancellationToken.None);
 
             Assert.IsType<NotFound>(result.Result);
-            Assert.NotNull(dbContext.Medications.Find(1));
-            Assert.NotNull(dbContext.Medications.Find(2));
-        }
-
-        [Theory]
-        [InlineData(0)]
-        [InlineData(-1)]
-        public async Task DeleteMedication_WhenIdNotGreaterThanZero_ReturnsBadRequest(int id)
-        {
-            await using var dbContext = CreateContext(NewMedication(1), NewMedication(2));
-
-            var result = await MedicationEndpoints.DeleteMedication(id, dbContext, CancellationToken.None);
-
-            var problem = Assert.IsType<ProblemHttpResult>(result.Result);
-            Assert.Equal(StatusCodes.Status400BadRequest, problem.StatusCode);
-            Assert.Equal("Id must be greater than zero.", problem.ProblemDetails.Detail);
             Assert.NotNull(dbContext.Medications.Find(1));
             Assert.NotNull(dbContext.Medications.Find(2));
         }
