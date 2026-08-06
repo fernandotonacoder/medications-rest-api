@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MedicationsDbContext>(opt => opt.UseInMemoryDatabase("Medications"));
 builder.Services.AddOpenApi();
 builder.Services.AddValidation();
+builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = true);
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddProblemDetails(options =>
 {
@@ -31,7 +32,8 @@ app.UseExceptionHandler(new ExceptionHandlerOptions
 {
     StatusCodeSelector = ex => ex is BadHttpRequestException badRequest
         ? badRequest.StatusCode
-        : StatusCodes.Status500InternalServerError
+        : StatusCodes.Status500InternalServerError,
+    SuppressDiagnosticsCallback = context => context.Exception is BadHttpRequestException
 });
 app.UseStatusCodePages();
 

@@ -1,19 +1,58 @@
 using Medications.Api.Contracts;
+using Medications.Api.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace Medications.Unit.Tests
 {
     public class CreateMedicationRequestUnitTests
     {
-        [Fact]
-        public void Name_WhenEmptyString_IsInvalid()
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        [InlineData("\t")]
+        public void Name_WhenEmptyOrWhitespace_IsInvalid(string name)
         {
-            var results = Validate(new CreateMedicationRequest { Name = "", Quantity = 10 });
+            var results = Validate(new CreateMedicationRequest { Name = name, Quantity = 10 });
 
             var error = Assert.Single(results);
             Assert.Equal("The Name field is required.", error.ErrorMessage);
             Assert.Contains(nameof(CreateMedicationRequest.Name), error.MemberNames);
             Assert.DoesNotContain(nameof(CreateMedicationRequest.Quantity), error.MemberNames);
+        }
+
+        [Fact]
+        public void Name_WhenNotSet_IsInvalid()
+        {
+            var results = Validate(new CreateMedicationRequest { Quantity = 10 });
+
+            var error = Assert.Single(results);
+            Assert.Equal("The Name field is required.", error.ErrorMessage);
+            Assert.Contains(nameof(CreateMedicationRequest.Name), error.MemberNames);
+        }
+
+        [Fact]
+        public void Name_WhenLongerThanMaxLength_IsInvalid()
+        {
+            var results = Validate(new CreateMedicationRequest
+            {
+                Name = new string('a', Medication.NameMaxLength + 1),
+                Quantity = 10
+            });
+
+            var error = Assert.Single(results);
+            Assert.Contains(nameof(CreateMedicationRequest.Name), error.MemberNames);
+        }
+
+        [Fact]
+        public void Name_AtMaxLength_IsValid()
+        {
+            var results = Validate(new CreateMedicationRequest
+            {
+                Name = new string('a', Medication.NameMaxLength),
+                Quantity = 10
+            });
+
+            Assert.Empty(results);
         }
 
         [Theory]
