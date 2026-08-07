@@ -1,5 +1,13 @@
 # Medications REST API
 
+[![CI](https://github.com/fernandotonacoder/medications-rest-api/actions/workflows/ci.yml/badge.svg)](https://github.com/fernandotonacoder/medications-rest-api/actions/workflows/ci.yml)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=fernandotonacoder_medications-rest-api)](https://sonarcloud.io/summary/overall?id=fernandotonacoder_medications-rest-api)
+
+[![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![Aspire](https://img.shields.io/badge/Aspire-512BD4?logo=dotnet&logoColor=white)](https://learn.microsoft.com/en-us/dotnet/aspire/)
+[![SQL Server](https://img.shields.io/badge/SQL%20Server-2022-CC2927)](https://www.microsoft.com/sql-server)
+[![Scalar](https://img.shields.io/badge/Scalar-API%20Reference-1F2937)](https://scalar.com/)
+
 A small REST API to list, create and delete medications, built with .NET 10 Minimal APIs.
 
 ## Tech stack
@@ -22,7 +30,7 @@ dotnet run --project src/Medications.AppHost
 aspire run
 ```
 
-The dashboard URL is printed on the console; the API and its Scalar UI are listed there. The AppHost runs SQL Server in a container pulled by Aspire automatically if non-existent, and passes the connection string to the API — nothing to configure. The container and its data are kept between runs.
+The dashboard URL is printed on the console; the API and its Scalar UI are listed there. The AppHost runs SQL Server in a container pulled by Aspire automatically if non-existent, and passes the connection string to the API, so there is nothing to configure. The container and its data are kept between runs.
 
 If running the solution directly from Visual Studio, Rider or VS Code, the IDE launches the browser with the Aspire Dashboard.
 
@@ -47,12 +55,12 @@ Standalone, the API listens on `http://localhost:5122`; interactive docs at `/sc
 
 ### Endpoints
 
-| Method   | Route                   | Success          | Errors |
-| -------- | ----------------------- | ---------------- | ------ |
-| `GET`    | `/api/medications`      | `200` list       | —      |
-| `GET`    | `/api/medications/{id}` | `200`            | `400` invalid id, `404` |
-| `POST`   | `/api/medications`      | `201` + Location | `400` validation |
-| `DELETE` | `/api/medications/{id}` | `204`            | `400` invalid id, `404` |
+| Method   | Route                   | Success | Errors |
+| -------- | ----------------------- | ------- | ------ |
+| `GET`    | `/api/medications`      | `200`   | —      |
+| `GET`    | `/api/medications/{id}` | `200`   | `400`, `404` |
+| `POST`   | `/api/medications`      | `201`   | `400` |
+| `DELETE` | `/api/medications/{id}` | `204`   | `400`, `404` |
 
 ## Tests
 
@@ -60,7 +68,7 @@ Standalone, the API listens on `http://localhost:5122`; interactive docs at `/sc
 dotnet test
 ```
 
-Unit tests cover the endpoint handlers, the mapping layer and the request contract's validation attributes, using the EF InMemory provider and a `FakeTimeProvider` — no database needed.
+Unit tests cover the endpoint handlers, the mapping layer and the request contract's validation attributes, using the EF InMemory provider and a `FakeTimeProvider`, so no database is needed.
 
 ## Database
 
@@ -78,7 +86,7 @@ dotnet ef database update --project src/Medications.Api         # apply without 
 - Validation uses DataAnnotations on the request DTO, enforced by .NET 10's built-in minimal API validation ([`AddValidation()`]). The route `id` is validated the same way, so every validation error has the same response shape.
 - `Name` is capped at 200 characters, defined once in `Medication.NameMaxLength` and used by both the DTO and the EF model.
 - The DTO doesn't use the C# `required` keyword for `Name`: a missing `name` then returns a normal field-level validation error instead of a generic 400.
-- Every error response uses the same JSON shape (ASP.NET Core's Problem Details) — validation errors, malformed JSON, invalid route values and 404s — wired once in Program.cs rather than per endpoint.
+- Every error response uses the same JSON shape (ASP.NET Core's Problem Details), whether it is a validation error, malformed JSON, an invalid route value or a 404. This is wired once in Program.cs, not per endpoint.
 - Binding failures keep their explanatory `detail` message in Production too (by default ASP.NET Core only includes it in Development), and client mistakes like malformed JSON are not logged as server errors.
 - Invalid ids (`0` or negative) return `400`; well-formed ids that don't exist return `404`.
 - `CreationDate` is set by the server (injected `TimeProvider`, faked in tests); `Id` and `CreationDate` are never accepted as input.
@@ -86,6 +94,15 @@ dotnet ef database update --project src/Medications.Api         # apply without 
 - The DbContext is registered with Aspire's [`AddSqlServerDbContext`], which adds retries, health checks and telemetry on top of `AddDbContext`.
 - The [SQL Server container] is pinned to a specific image tag instead of `2022-latest` (which changes over time), is kept between runs with its data in a volume, and its generated password lives in the AppHost's user secrets.
 - Migrations run at startup to keep the demo to a single command; a real deployment would apply them as a separate step.
+
+---
+
+<div align="center">
+
+Made with ❤️ by Fernando Tona
+[Website](https://fernandotonacoder.github.io) • [LinkedIn](https://www.linkedin.com/in/fernandotona/) • [GitHub](https://github.com/fernandotonacoder)
+
+</div>
 
 [Minimal APIs]: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/overview
 [.NET Aspire]: https://learn.microsoft.com/en-us/dotnet/aspire/

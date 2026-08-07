@@ -43,7 +43,7 @@ namespace Medications.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Medications", (string)null);
+                    b.ToTable("Medications");
                 });
 #pragma warning restore 612, 618
         }
