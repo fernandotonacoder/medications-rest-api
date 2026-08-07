@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.SqlServer"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Medications.Api\Medications.Api.csproj"/>
   </ItemGroup>
 

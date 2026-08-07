@@ -1,9 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <!-- Visual Studio only auto-detects a .runsettings in the solution root,
     so pointing at it explicitly is needed. -->
@@ -15,6 +12,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit.runner.visualstudio">
