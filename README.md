@@ -1,7 +1,6 @@
 # Medications REST API
 
 [![CI](https://github.com/fernandotonacoder/medications-rest-api/actions/workflows/ci.yml/badge.svg)](https://github.com/fernandotonacoder/medications-rest-api/actions/workflows/ci.yml)
-
 [![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![Aspire](https://img.shields.io/badge/Aspire-512BD4?logo=dotnet&logoColor=white)](https://learn.microsoft.com/en-us/dotnet/aspire/)
 [![SQL Server](https://img.shields.io/badge/SQL%20Server-2022-CC2927)](https://www.microsoft.com/sql-server)
