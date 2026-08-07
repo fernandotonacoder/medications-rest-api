@@ -42,6 +42,7 @@ jobs:
 
       - name: Begin Sonar analysis
         if: env.SONAR_TOKEN != ''
+        # Skips generated migrations, and composition roots until integration tests exist.
         run: |
           dotnet tool install --global dotnet-sonarscanner
           dotnet-sonarscanner begin \
@@ -49,7 +50,9 @@ jobs:
             /o:"fernandotonacoder" \
             /d:sonar.token="$SONAR_TOKEN" \
             /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml"
+            /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml" \
+            /d:sonar.exclusions="**/Migrations/**" \
+            /d:sonar.coverage.exclusions="**/Program.cs,**/AppHost.cs"
 
       - name: Build
         run: dotnet build --no-incremental

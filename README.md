@@ -16,7 +16,8 @@ A small REST API to list, create and delete medications, built with .NET 10 Mini
 - **EF Core** — SQL Server for the app, InMemory provider for unit tests
 - **[.NET Aspire]** — AppHost for local orchestration
 - **OpenAPI + Scalar** — generated document with interactive UI (Development only)
-- **xunit v3** — unit tests, with Coverlet coverage feeding SonarQube Cloud in CI
+- **xunit v3** — unit tests, with Coverlet coverage feeding SonarQube Cloud
+- **[GitHub Actions]** — builds and tests every push and pull request to `main`
 
 ## Getting started
 
@@ -111,3 +112,4 @@ Made with ❤️ by Fernando Tona
 [`AddSqlServerDbContext`]: https://aspire.dev/integrations/databases/efcore/sql-server/sql-server-connect/
 [SQL Server container]: https://aspire.dev/integrations/databases/sql-server/sql-server-host/
 [dotnet-ef]: https://learn.microsoft.com/en-us/ef/core/cli/dotnet
+[GitHub Actions]: .github/workflows/ci.yml
